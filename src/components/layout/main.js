@@ -13,27 +13,12 @@ function MainLayout(props) {
     },
   });
 
+  const CustomView = props.isNotScroll ? View : ScrollView;
+
   return (
     <NativeBaseProvider theme={theme}>
-      <ScrollView style={{}}>
+      <CustomView style={{}}>
         <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-
-        <View style={Styles.container}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={Styles.title}>kinoTickitz</Text>
-            <Icon
-              backgroundColor={'white'}
-              size={30}
-              name="menu"
-              color="black"
-              style={{marginTop: 15}}
-            />
-          </View>
-        </View>
 
         {props.children}
 
@@ -109,7 +94,7 @@ function MainLayout(props) {
             © 2020 Tickitz. All Rights Reserved.
           </Text>
         </View>
-      </ScrollView>
+      </CustomView>
     </NativeBaseProvider>
   );
 }
