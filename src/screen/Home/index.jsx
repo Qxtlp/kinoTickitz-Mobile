@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   ScrollView,
   View,
@@ -6,11 +7,17 @@ import {
   Image,
   TouchableHighlight,
   TextInput,
+  Pressable,
 } from 'react-native';
 import Styles from '../../styles/main';
 import Layout from '../../components/layout/main';
+import {getAllMovie} from '../../stores/action/movie';
+import Config from 'react-native-config';
+import {HStack, Spinner} from 'native-base';
 
 function HomeScreen(props) {
+  const dispatch = useDispatch();
+  const [month, setMonth] = useState('');
   const monthList = [
     {index: 1, name: 'January'},
     {index: 2, name: 'February'},
@@ -25,6 +32,24 @@ function HomeScreen(props) {
     {index: 11, name: 'November'},
     {index: 12, name: 'December'},
   ];
+
+  const movie = useSelector(state => state.movie);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, [month]);
+
+  const getData = () => {
+    try {
+      dispatch(getAllMovie(1, 6, '', '', month));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Layout>
@@ -48,11 +73,11 @@ function HomeScreen(props) {
         style={{
           backgroundColor: '#D6D8E7',
           width: '100%',
-          paddingVertical: 50,
+          paddingVertical: 30,
         }}>
         <View
           style={{
-            paddingHorizontal: 25,
+            paddingHorizontal: 20,
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
@@ -65,31 +90,42 @@ function HomeScreen(props) {
             view all
           </Text>
         </View>
-        <ScrollView horizontal={true} style={{paddingTop: 20}}>
-          {[1, 2, 3, 4, 5, 6].map(v => {
-            return (
-              <View
-                key={v}
-                style={{
-                  backgroundColor: 'hsla(0, 0%, 100%, 0.3)',
-                  borderColor: 'white',
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  marginStart: 20,
-                  padding: 15,
-                }}>
-                <Image
-                  source={require('../../images/show3.png')}
-                  resizeMode={'contain'}
+        {movie.isLoading ? (
+          <HStack space={3} justifyContent="center" h={200}>
+            <Spinner size={'lg'} color="indigo.500" />
+          </HStack>
+        ) : (
+          <ScrollView horizontal={true} style={{paddingTop: 20}}>
+            {movie.allData.map(v => {
+              let image = `${Config.IMG_URL}default-movie.png`;
+              if (v.image) image = `${Config.IMG_URL}${v.image}`;
+              return (
+                <Pressable
+                  key={v.id}
                   style={{
-                    flex: 1,
-                    width: 122,
-                    height: 185,
-                  }}></Image>
-              </View>
-            );
-          })}
-        </ScrollView>
+                    backgroundColor: 'hsla(0, 0%, 100%, 0.3)',
+                    borderColor: 'white',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    marginStart: 20,
+                    padding: 15,
+                  }}
+                  onPress={() => {
+                    props.navigation.navigate('Detail', {id: v.id});
+                  }}>
+                  <Image
+                    source={{uri: image}}
+                    resizeMode={'contain'}
+                    style={{
+                      flex: 1,
+                      width: 122,
+                      height: 185,
+                    }}></Image>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+        )}
       </View>
       <View style={{backgroundColor: 'white', paddingVertical: 50}}>
         <View
@@ -119,74 +155,90 @@ function HomeScreen(props) {
                   width: 127,
                   height: 42,
                   borderWidth: 1,
+                  backgroundColor: v.index == month ? '#5F2EEA' : 'white',
                   borderColor: '#5F2EEA',
                   borderRadius: 3,
                   justifyContent: 'center',
                   marginStart: 20,
                 }}
                 onPress={() => {
-                  alert(v.name);
+                  setMonth(v.index);
+                  if (v.index == month) setMonth('');
                 }}>
-                <Text style={{color: '#5F2EEA', textAlign: 'center'}}>
+                <Text
+                  style={{
+                    color: v.index != month ? '#5F2EEA' : 'white',
+                    textAlign: 'center',
+                  }}>
                   {v.name}
                 </Text>
               </TouchableHighlight>
             );
           })}
         </ScrollView>
-        <ScrollView horizontal={true} style={{paddingTop: 20}}>
-          {[1, 2, 3, 4, 5, 6].map(v => {
-            return (
-              <View
-                key={v}
-                style={{
-                  backgroundColor: 'hsla(0, 0%, 100%, 0.3)',
-                  borderColor: 'hsla(0, 0%, 87%, 1)',
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  marginStart: 20,
-                  padding: 15,
-                  flexDirection: 'column',
-                }}>
-                <Image
-                  source={require('../../images/show3.png')}
-                  resizeMode={'contain'}
-                  style={{
-                    width: 120,
-                    height: 185,
-                  }}></Image>
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                    marginTop: 10,
-                  }}>
-                  Title
-                </Text>
-                <Text style={{textAlign: 'center'}}>Category</Text>
 
-                <TouchableHighlight
-                  key={v.index}
-                  underlayColor="white"
+        {movie.isLoading ? (
+          <HStack space={3} justifyContent="center" h={200}>
+            <Spinner size={'lg'} color="indigo.500" />
+          </HStack>
+        ) : (
+          <ScrollView horizontal={true} style={{paddingTop: 20}}>
+            {movie.allData.map(v => {
+              let image = `${Config.IMG_URL}default-movie.png`;
+              if (v.image) image = `${Config.IMG_URL}${v.image}`;
+              return (
+                <View
+                  key={v.id}
                   style={{
-                    marginTop: 30,
-                    paddingVertical: 5,
+                    backgroundColor: 'hsla(0, 0%, 100%, 0.3)',
+                    borderColor: 'hsla(0, 0%, 87%, 1)',
                     borderWidth: 1,
-                    borderColor: '#5F2EEA',
-                    borderRadius: 3,
-                    justifyContent: 'center',
-                  }}
-                  onPress={() => {
-                    alert(v.name);
+                    borderRadius: 5,
+                    marginStart: 20,
+                    padding: 15,
+                    flexDirection: 'column',
                   }}>
-                  <Text style={{color: '#5F2EEA', textAlign: 'center'}}>
-                    Details
+                  <Image
+                    source={{uri: image}}
+                    resizeMode={'contain'}
+                    style={{
+                      width: 120,
+                      height: 185,
+                    }}></Image>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      marginTop: 10,
+                      color: 'black',
+                    }}>
+                    {v.name}
                   </Text>
-                </TouchableHighlight>
-              </View>
-            );
-          })}
-        </ScrollView>
+                  <Text style={{textAlign: 'center'}}>{v.category}</Text>
+
+                  <TouchableHighlight
+                    key={v.index}
+                    underlayColor="white"
+                    style={{
+                      marginTop: 30,
+                      paddingVertical: 5,
+                      borderWidth: 1,
+                      borderColor: '#5F2EEA',
+                      borderRadius: 3,
+                      justifyContent: 'center',
+                    }}
+                    onPress={() => {
+                      props.navigation.navigate('Detail', {id: v.id});
+                    }}>
+                    <Text style={{color: '#5F2EEA', textAlign: 'center'}}>
+                      Details
+                    </Text>
+                  </TouchableHighlight>
+                </View>
+              );
+            })}
+          </ScrollView>
+        )}
       </View>
       <View style={{...Styles.container, paddingVertical: 50}}>
         <View
