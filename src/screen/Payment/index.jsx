@@ -33,8 +33,10 @@ function Payment(props) {
           justifyContent="space-between"
           p={4}
           borderBottomRadius={20}>
-          <Text>Detail Account</Text>
-          <Text>Order History</Text>
+          <Text color={'gray.500'} fontSize="md">
+            Total Payment
+          </Text>
+          <Text fontSize="lg">00.00</Text>
         </View>
         <View px={4} py={5}>
           <Text>Payment Method</Text>
@@ -42,115 +44,133 @@ function Payment(props) {
             <View
               flexDirection="row"
               flexWrap={'wrap'}
-              justifyContent="space-between">
-              <View
-                borderWidth={1}
-                borderColor="gray.200"
-                borderRadius={'lg'}
-                px={4}
-                mt={2}
-                w={'80px'}
-                h={10}>
-                <Image
-                  source={require('../../images/logos_google-pay.png')}
-                  alt="Alternate Text"
-                  size="sm"
-                  resizeMode="contain"
-                  w={10}
-                  h={10}
-                />
+              justifyContent="space-evenly">
+              <View w={'1/3'}>
+                <View
+                  mx={'auto'}
+                  borderWidth={1}
+                  borderColor="gray.200"
+                  borderRadius={'lg'}
+                  px={4}
+                  mt={2}
+                  w={'80px'}
+                  h={10}>
+                  <Image
+                    source={require('../../images/logos_google-pay.png')}
+                    alt="Alternate Text"
+                    size="sm"
+                    resizeMode="contain"
+                    w={10}
+                    h={10}
+                  />
+                </View>
               </View>
 
-              <View
-                borderWidth={1}
-                borderColor="gray.200"
-                borderRadius={'lg'}
-                px={4}
-                mt={2}
-                w={'80px'}
-                h={10}>
-                <Image
-                  source={require('../../images/logos_visa.png')}
-                  alt="Alternate Text"
-                  size="sm"
-                  resizeMode="contain"
-                  w={10}
-                  h={10}
-                />
+              <View w={'1/3'}>
+                <View
+                  mx={'auto'}
+                  borderWidth={1}
+                  borderColor="gray.200"
+                  borderRadius={'lg'}
+                  px={4}
+                  mt={2}
+                  w={'80px'}
+                  h={10}>
+                  <Image
+                    source={require('../../images/logos_visa.png')}
+                    alt="Alternate Text"
+                    size="sm"
+                    resizeMode="contain"
+                    w={10}
+                    h={10}
+                  />
+                </View>
               </View>
 
-              <View
-                borderWidth={1}
-                borderColor="gray.200"
-                borderRadius={'lg'}
-                px={4}
-                mt={2}
-                w={'80px'}
-                h={10}>
-                <Image
-                  source={require('../../images/GoPay.png')}
-                  alt="Alternate Text"
-                  size="sm"
-                  resizeMode="contain"
-                  w={10}
-                  h={10}
-                />
+              <View w={'1/3'}>
+                <View
+                  mx={'auto'}
+                  borderWidth={1}
+                  borderColor="gray.200"
+                  borderRadius={'lg'}
+                  px={4}
+                  mt={2}
+                  w={'80px'}
+                  h={10}>
+                  <Image
+                    source={require('../../images/GoPay.png')}
+                    alt="Alternate Text"
+                    size="sm"
+                    resizeMode="contain"
+                    w={10}
+                    h={10}
+                  />
+                </View>
               </View>
 
-              <View
-                borderWidth={1}
-                borderColor="gray.200"
-                borderRadius={'lg'}
-                px={4}
-                mt={2}
-                w={'80px'}
-                h={10}>
-                <Image
-                  source={require('../../images/logos_paypal.png')}
-                  alt="Alternate Text"
-                  size="sm"
-                  resizeMode="contain"
-                  w={5}
-                  h={5}
-                  mx="auto"
-                  mt="2"
-                />
+              <View w={'1/3'}>
+                <View
+                  mx={'auto'}
+                  borderWidth={1}
+                  borderColor="gray.200"
+                  borderRadius={'lg'}
+                  px={4}
+                  mt={2}
+                  w={'80px'}
+                  h={10}>
+                  <Image
+                    source={require('../../images/logos_paypal.png')}
+                    alt="Alternate Text"
+                    size="sm"
+                    resizeMode="contain"
+                    w={5}
+                    h={5}
+                    mx="auto"
+                    mt="2"
+                  />
+                </View>
               </View>
 
-              <View
-                borderWidth={1}
-                borderColor="gray.200"
-                borderRadius={'lg'}
-                px={4}
-                mt={2}
-                w={'80px'}
-                h={10}>
-                <Image
-                  source={require('../../images/ovo.png')}
-                  alt="Alternate Text"
-                  size="sm"
-                  resizeMode="contain"
-                  w={10}
-                  h={10}
-                />
+              <View w={'1/3'}>
+                <View
+                  mx={'auto'}
+                  borderWidth={1}
+                  borderColor="gray.200"
+                  borderRadius={'lg'}
+                  px={4}
+                  mt={2}
+                  w={'80px'}
+                  h={10}>
+                  <Image
+                    source={require('../../images/ovo.png')}
+                    alt="Alternate Text"
+                    size="sm"
+                    resizeMode="contain"
+                    w={10}
+                    h={10}
+                  />
+                </View>
               </View>
 
-              <View
-                borderWidth={1}
-                borderColor="gray.200"
-                borderRadius={'lg'}
-                px={4}
-                mt={2}
-                w={'80px'}
-                h={10}>
-                <Image
-                  source={require('../../images/DANA.png')}
-                  alt="Alternate Text"
-                  size="sm"
-                  resizeMode="contain"
-                  w={10}
-                  h={10}
-                />
+              <View w={'1/3'}>
+                <View
+                  mx={'auto'}
+                  borderWidth={1}
+                  borderColor="gray.200"
+                  borderRadius={'lg'}
+                  px={4}
+                  mt={2}
+                  w={'80px'}
+                  h={10}>
+                  <Image
+                    source={require('../../images/DANA.png')}
+                    alt="Alternate Text"
+                    size="sm"
+                    resizeMode="contain"
+                    w={10}
+                    h={10}
+                  />
+                </View>
               </View>
             </View>
             <View style={{flexDirection: 'row'}} my={5}>
