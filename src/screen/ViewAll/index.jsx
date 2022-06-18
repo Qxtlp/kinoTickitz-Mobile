@@ -22,6 +22,7 @@ function ViewAll(props) {
   const [month, setMonth] = useState('');
   const [limit, setLimit] = useState(4);
   const [sort, setSort] = useState('');
+  const [refresh, setRefresh] = useState(false);
   const monthList = [
     {index: 1, name: 'January'},
     {index: 2, name: 'February'},
@@ -40,6 +41,7 @@ function ViewAll(props) {
   const movie = useSelector(state => state.movie);
 
   useEffect(() => {
+    setRefresh(true);
     getData();
   }, []);
 
@@ -49,7 +51,9 @@ function ViewAll(props) {
 
   const getData = () => {
     try {
-      dispatch(getAllMovie(1, limit, '', '', month));
+      dispatch(getAllMovie(1, limit, '', '', month)).then(res =>
+        setRefresh(false),
+      );
     } catch (error) {
       console.log(error);
     }
@@ -143,8 +147,14 @@ function ViewAll(props) {
     <Layout isNotScroll={true}>
       <FlatList
         data={movie.allData}
+        keyExtractor={item => item.id}
         numColumns={2}
         ListHeaderComponent={headerComponents}
+        onRefresh={() => {
+          setLimit(4);
+          setRefresh(true);
+        }}
+        refreshing={refresh}
         columnWrapperStyle={{flex: 1, justifyContent: 'space-evenly'}}
         onEndReached={() =>
           limit < movie.pageInfo.allMovie ? setLimit(limit + 4) : null
