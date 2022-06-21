@@ -1,10 +1,11 @@
 import React from 'react';
-import {ScrollView, Text} from 'react-native';
+import {ScrollView, StatusBar, Text} from 'react-native';
 import Styles from '../../styles/auth';
 
 function AuthLayout(props) {
   return (
     <ScrollView style={Styles.container}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <Text style={Styles.title}>kinoTickitz</Text>
       <Text style={{fontWeight: 'bold', fontSize: 25, color: 'black'}}>
         {props.title}
