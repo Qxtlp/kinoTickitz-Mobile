@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import Styles from '../../styles/auth';
@@ -22,14 +23,10 @@ function LoginScreen(props) {
     try {
       setIsLoading(true);
       const result = await axios.post('auth/login', form);
-      await AsyncStorage.multiSet(
-        [
-          ['id', result.data.data.id],
-          ['token', result.data.data.token],
-          ['refreshToken', result.data.data.refreshToken],
-        ],
-        err => console.log(err),
-      );
+      await AsyncStorage.setItem('id', result.data.data.id);
+      await AsyncStorage.setItem('token', result.data.data.token);
+      await AsyncStorage.setItem('refreshToken', result.data.data.refreshToken);
+
       setIsLoading(false);
 
       props.navigation.navigate('AppScreen', {
@@ -121,9 +118,11 @@ function LoginScreen(props) {
       <View style={{marginTop: 10}}>
         <Text style={{marginTop: 10, textAlign: 'center'}}>
           Forgot your password?{' '}
-          <Text style={{...Styles.textMain, textDecorationLine: 'underline'}}>
-            Reset now
-          </Text>
+          <Pressable onPress={() => props.navigation.navigate('Reset')}>
+            <Text style={{...Styles.textMain, textDecorationLine: 'underline'}}>
+              Reset now
+            </Text>
+          </Pressable>
         </Text>
 
         <Text style={{marginTop: 10, textAlign: 'center'}}>
