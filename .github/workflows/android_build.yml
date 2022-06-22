@@ -20,14 +20,11 @@ jobs:
 
       - name: Build Android Release
         run: |
-          cd android && ./gradlew assembleRelease --no-daemon
+          echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > android/app/staging.keystore
+          cd android && ./gradlew assembleRelease
 
-      - name: Sign APK
-        id: sign_app
-        uses: r0adkll/sign-android-release@v1
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
         with:
-          releaseDirectory: android/app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.KEYSTORE_FILE }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.ALIAS }}
-          keyPassword: ${{ secrets.ALIAS }}
+          name: release
+          path: android/app/build/outputs/apk/release/app-release.apk
