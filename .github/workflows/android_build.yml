@@ -18,13 +18,21 @@ jobs:
       - name: Install dependencies
         run: npm i
 
+      - name: 'Create env file'
+        run: |
+          echo IMG_URL=https://res.cloudinary.com/qxtlp/image/upload/v1650870005/ >> .env
+
       - name: Build Android Release
         run: |
           echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > android/app/kinoTickitz.keystore
           cd android && ./gradlew assembleRelease
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: release
-          path: android/app/build/outputs/apk/release/app-release.apk
+       - name: Create pre-release
+         uses: "marvinpinto/action-automatic-releases@latest"
+         with:
+         repo_token: "${{ secrets.GITHUB_TOKEN }}"
+         automatic_release_tag: "release"
+         prerelease: false
+         title: "Android Build"
+         files: |
+          android/app/build/outputs/apk/release/*.apk
