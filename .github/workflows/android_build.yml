@@ -11,27 +11,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
           cache: 'npm'
-      
       - name: Install dependencies
         run: npm i
-
       - name: 'Create env file'
         run: |
           echo IMG_URL=https://res.cloudinary.com/qxtlp/image/upload/v1650870005/ >> .env
-
       - name: Cache Gradle Wrapper
         uses: actions/cache@v2
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-
       - name: Cache Gradle Dependencies
         uses: actions/cache@v2
         with:
@@ -39,18 +34,16 @@ jobs:
           key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-caches-
-
       - name: Build Android Release
         run: |
           echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > android/app/kinoTickitz.keystore
           cd android && ./gradlew assembleRelease --no-daemon
-
-       - name: Create pre-release
-         uses: "marvinpinto/action-automatic-releases@latest"
-         with:
-         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-         automatic_release_tag: "release"
-         prerelease: false
-         title: "Android Build"
-         files: |
-          android/app/build/outputs/apk/release/*.apk
+      - name: Create pre-release
+        uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+        repo_token: '${{ secrets.GITHUB_TOKEN }}'
+        automatic_release_tag: 'release'
+        prerelease: false
+        title: 'Android Build'
+        files: |
+          android/app/build/outputs/apk/release/*.apk8
