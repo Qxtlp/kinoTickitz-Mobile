@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Android Release
         run: |
-          echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > android/app/staging.keystore
+          echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > android/app/kinoTickitz.keystore
           cd android && ./gradlew assembleRelease
 
       - name: Upload Artifact
