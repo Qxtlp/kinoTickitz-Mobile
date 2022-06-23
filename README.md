@@ -1,4 +1,10 @@
-<div style="color:#5F2EEA;font-size:70px;font-weight:bold;text-align:center"> kinoTickitz</div>
+&nbsp;
+
+<p align="center">
+<img src="https://i.imgur.com/Coa0baQ.png" title="" alt="kinoKarte" data-align="center">
+</p>
+
+&nbsp;
 
 ## About The Project
 
