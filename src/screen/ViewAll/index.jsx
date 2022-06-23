@@ -22,6 +22,7 @@ function ViewAll(props) {
   const [month, setMonth] = useState('');
   const [limit, setLimit] = useState(4);
   const [sort, setSort] = useState('');
+  const [search, setSearch] = useState('');
   const [refresh, setRefresh] = useState(false);
   const monthList = [
     {index: 1, name: 'January'},
@@ -47,17 +48,18 @@ function ViewAll(props) {
 
   useEffect(() => {
     getData();
-  }, [month, limit, sort]);
+  }, [month, limit, sort, search]);
 
   const getData = () => {
     try {
-      dispatch(getAllMovie(1, limit, '', '', month)).then(res =>
-        setRefresh(false),
-      );
+      dispatch(getAllMovie(1, limit, sort, search, month))
+        .then(res => setRefresh(false))
+        .catch(err => setRefresh(false));
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(movie.pageInfo.allMovie);
 
   const headerComponents = () => {
     return (
@@ -67,7 +69,7 @@ function ViewAll(props) {
           <View flexDirection={'row'} mt={2} h={9}>
             <Select
               placeholder="Sort"
-              //   selectedValue={language}
+              selectedValue={sort}
               flex={1}
               dropdownIcon={
                 <Icon name="caret-down" style={{marginEnd: 10}}></Icon>
@@ -76,9 +78,13 @@ function ViewAll(props) {
               borderRadius={'full'}
               bg="white"
               h={1}
-              onValueChange={itemValue => setSort(itemValue)}>
+              onValueChange={itemValue => {
+                setSort(itemValue);
+                setLimit(4);
+              }}>
               <Select.Item label="Sort" value="" />
-              <Select.Item label="Name" value="name asc" />
+              <Select.Item label={`Name A-Z`} value="name asc" />
+              <Select.Item label="Name Z-A" value="name desc" />
             </Select>
             <Input
               flex={2}
@@ -87,6 +93,8 @@ function ViewAll(props) {
               w={'full'}
               placeholder="Search movie name"
               variant={'rounded'}
+              value={search}
+              onChangeText={value => setSearch(value)}
             />
           </View>
           <ScrollView
@@ -109,6 +117,7 @@ function ViewAll(props) {
                   }}
                   onPress={() => {
                     setMonth(v.index);
+                    setLimit(4);
                     if (v.index == month) setMonth('');
                   }}>
                   <Text

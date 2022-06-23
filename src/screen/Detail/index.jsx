@@ -34,21 +34,31 @@ function Detail(props) {
 
   const {data} = useSelector(state => state.movie);
   const schedule = useSelector(state => state.schedule);
-  console.log(dataOrder);
+
+  useEffect(() => {
+    (async () => {
+      dispatch(getSchedule(1, 3, location, '', props.route.params.id)).then(
+        res => {
+          setLocationList(res.value.data.data.map(v => v.location));
+        },
+      );
+      getData();
+    })();
+  }, []);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [location]);
 
   const getData = () => {
     try {
       dispatch(getDataId(props.route.params.id)).catch(err => {
         Promise.reject(err);
       });
-      dispatch(getSchedule(1, 3, '', '', props.route.params.id))
+
+      dispatch(getSchedule(1, 3, location, '', props.route.params.id))
         .then(res => {
           console.log();
-          setLocationList(res.value.data.data.map(v => v.location));
         })
         .catch(err => {
           Promise.reject(err);
@@ -64,7 +74,6 @@ function Detail(props) {
       dateBooking: selectedDate.toISOString().split('T')[0],
     });
   };
-
   return (
     <Layout>
       <View bg="white" py={'5'}>
@@ -160,7 +169,7 @@ function Detail(props) {
                   }}
                 />
                 <Select
-                  //   selectedValue={service}
+                  selectedValue={location}
                   minWidth="85%"
                   accessibilityLabel="Select Location"
                   placeholder="Choose Location"
@@ -173,8 +182,7 @@ function Detail(props) {
                       style={{marginEnd: 11}}></Icon>
                   }
                   borderRadius={'none'}
-                  //   onValueChange={itemValue => setService(itemValue)}
-                >
+                  onValueChange={itemValue => setLocation(itemValue)}>
                   {Array.from(new Set(locationList)).map(v => {
                     return <Select.Item label={v} value={v} key={v} />;
                   })}
@@ -182,120 +190,136 @@ function Detail(props) {
               </View>
             </View>
           </Box>
-          {schedule.data.map(v => {
-            console.log(v);
+          {schedule.isloading ? (
+            <Spinner size="lg" color={'black'} />
+          ) : !schedule.data.length ? (
+            <Box mt={10} rounded="lg">
+              No schedule available
+            </Box>
+          ) : (
+            schedule.data.map(v => {
+              console.log(v);
 
-            let premiere = '';
-            switch (v.premiere) {
-              case 'Ebu.Id':
-                premiere = require('../../images/ebu.png');
-                break;
+              let premiere = '';
+              switch (v.premiere) {
+                case 'Ebu.Id':
+                  premiere = require('../../images/ebu.png');
+                  break;
 
-              case 'CineOne21':
-                premiere = require('../../images/cineone.png');
-                break;
+                case 'CineOne21':
+                  premiere = require('../../images/cineone.png');
+                  break;
 
-              case 'hiflix':
-                premiere = require('../../images/hiflix.png');
-                break;
+                case 'hiflix':
+                  premiere = require('../../images/hiflix.png');
+                  break;
 
-              default:
-                break;
-            }
+                default:
+                  break;
+              }
 
-            return (
-              <Box
-                bg="white"
-                px="7"
-                py={10}
-                mt={10}
-                w={'full'}
-                rounded="lg"
-                key={v.id}>
-                <Center>
-                  <Image
-                    source={premiere}
-                    width={80}
-                    height={30}
-                    resizeMode="contain"
-                    alt="sponsor"></Image>
-                  <Text color={'gray.400'} mt={5} px="10" textAlign={'center'}>
-                    {v.location}
-                  </Text>
-                </Center>
-                <View px={5}>
-                  <Divider mt={10} />
-                </View>
-                <View flexDirection={'row'} flexWrap="wrap" pl={'4'}>
-                  {v.time.split(',').map((time, i) => {
-                    console.log(
-                      time == dataOrder.bookingTime &&
-                        v.id == dataOrder.scheduleId,
-                    );
-                    return (
-                      <Button
-                        p="1"
-                        mx={1}
-                        mt="2"
-                        key={time}
-                        bgColor={
-                          time == dataOrder.bookingTime &&
-                          v.id == dataOrder.scheduleId
-                            ? 'indigo.500'
-                            : 'white'
-                        }
-                        onPress={() =>
-                          setDataOrder({
-                            ...dataOrder,
-                            bookingTime: time,
-                            scheduleId: v.id,
-                          })
-                        }>
-                        <Text
-                          textAlign={'center'}
-                          fontSize={'md'}
-                          color={
+              return (
+                <Box
+                  bg="white"
+                  px="7"
+                  py={10}
+                  mt={10}
+                  w={'full'}
+                  rounded="lg"
+                  key={v.id}>
+                  <Center>
+                    <Image
+                      source={premiere}
+                      width={80}
+                      height={30}
+                      resizeMode="contain"
+                      alt="sponsor"></Image>
+                    <Text
+                      color={'gray.400'}
+                      mt={5}
+                      px="10"
+                      textAlign={'center'}>
+                      {v.location}
+                    </Text>
+                  </Center>
+                  <View px={5}>
+                    <Divider mt={10} />
+                  </View>
+                  <View flexDirection={'row'} flexWrap="wrap" pl={'4'}>
+                    {v.time.split(',').map((time, i) => {
+                      console.log(
+                        time == dataOrder.bookingTime &&
+                          v.id == dataOrder.scheduleId,
+                      );
+                      return (
+                        <Button
+                          p="1"
+                          mx={1}
+                          mt="2"
+                          key={time}
+                          bgColor={
                             time == dataOrder.bookingTime &&
                             v.id == dataOrder.scheduleId
-                              ? 'white'
-                              : 'black'
+                              ? 'indigo.500'
+                              : 'white'
+                          }
+                          onPress={() =>
+                            setDataOrder({
+                              ...dataOrder,
+                              bookingTime: time,
+                              scheduleId: v.id,
+                            })
                           }>
-                          {time}
-                        </Text>
-                      </Button>
-                    );
-                  })}
-                </View>
-                <View px={4}>
-                  <View
-                    flexDirection={'row'}
-                    justifyContent={'space-between'}
-                    mt="5">
-                    <Text>Price</Text>
-                    <Text>
-                      Rp.
-                      {v.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                      /seat
-                    </Text>
+                          <Text
+                            textAlign={'center'}
+                            fontSize={'md'}
+                            color={
+                              time == dataOrder.bookingTime &&
+                              v.id == dataOrder.scheduleId
+                                ? 'white'
+                                : 'black'
+                            }>
+                            {time}
+                          </Text>
+                        </Button>
+                      );
+                    })}
                   </View>
+                  <View px={4}>
+                    <View
+                      flexDirection={'row'}
+                      justifyContent={'space-between'}
+                      mt="5">
+                      <Text>Price</Text>
+                      <Text>
+                        Rp.
+                        {v.price
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        /seat
+                      </Text>
+                    </View>
 
-                  <Button
-                    mt={5}
-                    colorScheme="indigo"
-                    bg={
-                      v.id == dataOrder.scheduleId ? 'indigo.600' : 'indigo.400'
-                    }
-                    shadow={v.id == dataOrder.scheduleId ? 5 : 0}
-                    disabled={v.id != dataOrder.scheduleId}
-                    onPress={() =>
-                      props.navigation.navigate('Order', {...dataOrder, ...v})
-                    }>
-                    Book now
-                  </Button>
-                </View>
-              </Box>
-            );
-          })}
+                    <Button
+                      mt={5}
+                      colorScheme="indigo"
+                      bg={
+                        v.id == dataOrder.scheduleId
+                          ? 'indigo.600'
+                          : 'indigo.400'
+                      }
+                      shadow={v.id == dataOrder.scheduleId ? 5 : 0}
+                      disabled={v.id != dataOrder.scheduleId}
+                      onPress={() =>
+                        props.navigation.navigate('Order', {...dataOrder, ...v})
+                      }>
+                      Book now
+                    </Button>
+                  </View>
+                </Box>
+              );
+            })
+          )}
         </Center>
       </View>
     </Layout>
