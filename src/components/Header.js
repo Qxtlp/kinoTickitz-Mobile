@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableWithoutFeedback} from 'react-native';
+import {View, Text, TouchableWithoutFeedback, Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import Styles from '../styles/main';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Header(props) {
   return (
@@ -12,7 +11,13 @@ export default function Header(props) {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <Text style={Styles.title}>kinoTickitz</Text>
+        <Pressable
+          onPress={() => {
+            props.navigation.navigate('Home');
+          }}>
+          <Text style={Styles.title}>kinoTickitz</Text>
+        </Pressable>
+
         <TouchableWithoutFeedback onPress={() => props.navigation.openDrawer()}>
           <Icon
             backgroundColor={'white'}
