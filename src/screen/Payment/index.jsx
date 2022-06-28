@@ -23,6 +23,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
 import {postBooking} from '../../stores/action/booking';
 import {WebView} from 'react-native-webview';
+import Notif from '../../utils/notif';
 
 function Payment(props) {
   const dispatch = useDispatch();
@@ -43,9 +44,10 @@ function Payment(props) {
   };
 
   function payOrder() {
-    dispatch(postBooking(data)).then(res =>
-      setRedirect({open: true, url: res.value.data.data.redirectUrl}),
-    );
+    dispatch(postBooking(data)).then(res => {
+      Notif.bookingSuccessNotification();
+      setRedirect({open: true, url: res.value.data.data.redirectUrl});
+    });
   }
 
   return redirect.open ? (
