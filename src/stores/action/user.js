@@ -1,29 +1,36 @@
-import axios from "../../utils/axios";
+import axios from '../../utils/axios';
 
-export const getUser = (id) => {
+export const getUser = id => {
   return {
-    type: "GET_USER",
-    payload: axios.get(`user/${id}`)
+    type: 'GET_USER',
+    payload: axios.get(`user/${id}`),
   };
 };
 
-export const updateProfile = (form) => {
+export const updateProfile = form => {
   return {
-    type: "UPDATE_PROFILE",
-    payload: axios.patch(`user/profile`, form)
+    type: 'UPDATE_PROFILE',
+    payload: axios.patch('user/profile', form),
   };
 };
 
-export const updateImage = (form) => {
+export const updateImage = form => {
   return {
-    type: "UPDATE_IMAGE",
-    payload: axios.patch(`user/image`, form)
+    type: 'UPDATE_IMAGE',
+    payload: axios.patch('user/image', form),
   };
 };
 
-export const changePassword = (form) => {
+export const deleteImage = () => {
   return {
-    type: "UPDATE_PASSWORD",
-    payload: axios.patch(`user/password`, form)
+    type: 'DELETE_IMAGE',
+    payload: axios.delete('user/image'),
+  };
+};
+
+export const changePassword = form => {
+  return {
+    type: 'UPDATE_PASSWORD',
+    payload: axios.patch('user/password', form),
   };
 };

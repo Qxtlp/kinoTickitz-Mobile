@@ -40,6 +40,7 @@ import {
   getUser,
   updateImage,
   updateProfile,
+  deleteImage,
 } from '../../stores/action/user';
 import {getBookingUser, getBooking} from '../../stores/action/booking';
 import QRCode from 'react-native-qrcode-svg';
@@ -141,7 +142,10 @@ const DetailsAccount = props => {
                   onPress={() =>
                     launchImageLibrary(
                       {mediaType: 'photo', maxHeight: 512, maxWidth: 512},
-                      res => handleImage(res.assets[0]),
+                      res => {
+                        if (res.didCancel) return 0;
+                        handleImage(res.assets[0]);
+                      },
                     )
                   }>
                   Chose Image
@@ -150,10 +154,35 @@ const DetailsAccount = props => {
                   onPress={() =>
                     launchCamera(
                       {mediaType: 'photo', maxHeight: 512, maxWidth: 512},
-                      res => handleImage(res.assets[0]),
+                      res => {
+                        if (res.didCancel) return 0;
+                        handleImage(res.assets[0]);
+                      },
                     )
                   }>
                   Launch Camera
+                </Actionsheet.Item>
+                <Actionsheet.Item
+                  onPress={() =>
+                    dispatch(deleteImage()).then(res => {
+                      getData();
+                      toast.show({
+                        render: () => {
+                          return (
+                            <Box
+                              bg="emerald.500"
+                              px="2"
+                              py="1"
+                              rounded="sm"
+                              mb={5}>
+                              <Text color={'white'}>image deleted!</Text>
+                            </Box>
+                          );
+                        },
+                      });
+                    })
+                  }>
+                  Delete
                 </Actionsheet.Item>
                 <Actionsheet.Item onPress={onClose}>Cancel</Actionsheet.Item>
               </Actionsheet.Content>
