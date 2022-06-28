@@ -8,6 +8,8 @@ import {
   TouchableHighlight,
   TextInput,
   Pressable,
+  BackHandler,
+  Alert,
 } from 'react-native';
 import Styles from '../../styles/main';
 import Layout from '../../components/layout/main';
@@ -37,6 +39,23 @@ function HomeScreen(props) {
 
   useEffect(() => {
     getData();
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Are you sure you want exit app?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   useEffect(() => {
